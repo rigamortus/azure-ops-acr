@@ -1,6 +1,15 @@
 name: build and push to ACR
 
 on:
+    workflow_dispatch: 
+        inputs:
+          CONFIRM:
+            description: confirm trigger
+            type: choice
+            options:
+              - 'yes'
+              - 'no'
+            required: true
     push: 
         branches: [main]
         paths-ignore: 'README.md'
@@ -15,7 +24,7 @@ jobs:
             - name: Login to ACR
               uses: azure/docker-login@v2
               with:
-                  login-server: 'rigamortus.azurecr.io'
+                  login-server: 'rigamortus.azurecr.io' # default: index.docker.io
                   username: 'rigamortus'
                   password: '${{ secrets.ACR_PASS }}'
             - name: Build and Push
