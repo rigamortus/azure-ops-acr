@@ -1,0 +1,26 @@
+name: build and push to ACR
+
+on:
+    push: 
+        branches: [main]
+        paths-ignore: 'README.md'
+
+jobs:
+    build-and-push:
+        name: Build and Push Image
+        runs-on: ubuntu-latest
+        steps:
+            - name: Repo Checkout
+              uses: actions/checkout@v4
+            - name: Login to ACR
+              uses: azure/docker-login@v2
+              with:
+                  login-server: 'rigamortus.azurecr.io'
+                  username: 'rigamortus'
+                  password: '${{ secrets.ACR_PASS }}'
+            - name: Build and Push
+              uses: docker/build-push-action@v6
+              with:
+                context: .
+                push: true
+                tags: rigamortus.azurecr.io/app1-nginx:latest
